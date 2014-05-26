@@ -1,0 +1,7 @@
+/bin/run.sh
+.project
+.metadata
+.classpath
+.settings/
+.loadpath
+target/
