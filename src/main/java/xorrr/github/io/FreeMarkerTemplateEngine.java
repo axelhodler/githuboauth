@@ -1,41 +1,35 @@
 package xorrr.github.io;
 
-import java.io.IOException;
 import java.io.StringWriter;
 
 import spark.ModelAndView;
 import spark.TemplateEngine;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import freemarker.template.TemplateException;
 
 public class FreeMarkerTemplateEngine extends TemplateEngine {
 
-    private Configuration configuration;
+    private Configuration config;
 
     protected FreeMarkerTemplateEngine() {
-        this.configuration = createFreemarkerConfiguration();
+        this.config = createFreemarkerConfiguration();
     }
 
     @Override
     public String render(ModelAndView modelAndView) {
+        StringWriter sw = new StringWriter();
         try {
-            StringWriter stringWriter = new StringWriter();
-
-            Template template = configuration.getTemplate(modelAndView.getViewName());
-            template.process(modelAndView.getModel(), stringWriter);
-
-            return stringWriter.toString();
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        } catch (TemplateException e) {
-            throw new IllegalArgumentException(e);
+            Template t = config.getTemplate(modelAndView.getViewName());
+            t.process(modelAndView.getModel(), sw);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return sw.toString();
     }
 
     private Configuration createFreemarkerConfiguration() {
-        Configuration retVal = new Configuration();
-        retVal.setClassForTemplateLoading(FreeMarkerTemplateEngine.class, "freemarker");
-        return retVal;
+        Configuration c = new Configuration();
+        c.setClassForTemplateLoading(FreeMarkerTemplateEngine.class, "freemarker");
+        return c;
     }
 }
